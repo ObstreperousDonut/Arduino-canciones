@@ -1,0 +1,276 @@
+#include <Wire.h>
+#include <LiquidCrystal_I2C.h>
+
+// Dirección típica del adaptador I2C (cambia a 0x3F si no funciona)
+LiquidCrystal_I2C lcd(0x27, 16, 2);
+
+int pinBuzzer = 12;
+
+// ------------------ Notas musicales ------------------
+int C__ =  261/4;
+int Cs__=  277/4;
+int D__ =  293/4 ;
+int Ds__=  311/4;
+int E__ =  329/4 ;
+int F__ =  349/4 ;
+int Fs__=  369/4;
+int G__ =  391/4 ;
+int Gs__=  415/4;
+int A__ =  440/4 ;
+int As__=  466/4;
+int B__ =  493/4 ;
+
+int C_ =  261/2;
+int Cs_=  277/2;
+int D_ =  293/2 ;
+int Ds_=  311/2;
+int E_ =  329/2 ;
+int F_ =  349/2 ;
+int Fs_=  369/2;
+int G_ =  391/2 ;
+int Gs_=  415/2;
+int A_ =  440/2 ;
+int As_=  466/2;
+int B_ =  493/2 ;
+
+int C =  261;
+int Cs=  277;
+int D =  293 ;
+int Ds=  311;
+int E =  329 ;
+int F =  349 ;
+int Fs=  369;
+int G =  391 ;
+int Gs=  415;
+int A =  440 ;
+int As=  466;
+int B =  493 ;
+
+int C2   =524;
+int Cs2  =555;
+int D2   =588;
+int Ds2  =623;
+int E2   =660;
+int F2   =699;
+int Fs2  =740;
+int G2   =784;
+int Gs2  =831;
+int A_2   =880;
+int As2  =933;
+int B2   =988;
+
+int  C3   =524*2;
+int Cs3   =555*2;
+int  D3   =588*2;
+int Ds3   =623*2;
+int  E3   =660*2;
+int  F3   =699*2;
+int Fs3   =740*2;
+int  G3   =784*2;
+int Gs3   =831*2;
+int A_3   =880*2;
+int As3   =933*2;
+int  B3   =988*2;
+
+int  C4   =524*4;
+int Cs4   =555*4;
+int  D4   =588*4;
+int Ds4   =623*4;
+int  E4   =660*4;
+int  F4   =699*4;
+int Fs4   =740*4;
+int  G4   =784*4;
+int Gs4   =831*4;
+int A_4   =880*4;
+int As4   =933*4;
+int  B4   =988*4;
+
+// ------------------ Tiempos ------------------
+int tempo = 129;  
+int semi = 60000/( tempo * 4 *2);
+
+int corch = 2*semi;
+int negra = corch*2;
+int np = corch*3;
+
+int blanca = negra*2;
+int redonda = blanca*2;
+int rep = 3*negra;
+int bnp = 3*negra+3*corch;
+
+int b =blanca;
+int r =2*b;
+int n = negra;
+int c = corch;
+int s = semi;
+int f = s/2;
+int sf = f/2;
+
+int cp = c+s;
+int Sil = 10;
+
+int retardo = 115;
+
+int tttt= b+cp  - (c+s+c+c+f);
+
+// ------------------ Funciones ------------------
+void nota(int nota, int duracion){
+  tone(pinBuzzer,nota, duracion);
+  delay(duracion);
+  noTone(pinBuzzer);
+  delay(duracion);
+}
+
+void nota_sf(int N ,int d ){
+  int  ttt = sf/2;
+  nota( N*0.84089641525 , ttt);
+  nota( N*0.89089871814 , ttt);
+  nota( N*0.94387431268 , ttt);
+  nota( N              , d - 3*ttt);
+}
+
+void textopan(String S1,String S2){
+  lcd.clear();
+  lcd.setCursor(0,0);
+  lcd.print(S1);
+  lcd.setCursor(0,1);
+  lcd.print(S2);
+}
+
+// ------------------ Canción ------------------
+void NoNoquieroSer(){
+  textopan("No, no quiero   ","ser             ");
+  nota_sf(A,n);
+  nota(B_,c);
+  nota(Fs,n);
+  nota(B,c-f);
+  nota(A,c+f);
+  nota(A,np);
+  nota(Fs_,c);
+
+  textopan("esa mujer       ","                ");
+  nota(Fs,n);
+  nota(B,c-f);
+  nota(A,c+f);
+  nota(A,np);
+  nota(G_,c);
+
+  textopan("Ella se fue a   ","un abismo       ");
+  nota_sf(Fs,c);
+  nota(Fs,cp-f);
+  nota(G ,cp+f);
+  nota(A ,c+c);
+
+  nota(G,n);
+  nota(Fs,n);
+  nota(D,np);
+}
+
+void TuNoeres(){
+  textopan(" /              ","Tu no eres aquel");
+  nota_sf(A,n);
+  nota(B_,c);
+  nota(Fs,n);
+  nota(B,c-f);
+  nota(A,c+f);
+  nota(A,np);
+  nota(Fs_,c);
+
+  textopan("           /    ","que prometio    ");
+  nota(Fs,n);
+  nota(B,c-f);
+  nota(A,c+f);
+  nota(A,np);
+  nota(G_,c);
+
+  textopan("   /            ","SerIa           ");
+  nota_sf(B_,c);
+  nota(B_,cp-f);
+
+  textopan("         /      ","mi superheroe   ");
+  nota(Cs ,cp+f);
+  nota(D , c+ c);
+
+  nota(E,n);
+  nota(Fs,n);
+  nota(G,np);
+}
+
+void YquenoQueda(){
+  textopan("               /","Y que todo acabo");
+  nota(Fs,n);
+  nota(B_,c);
+
+  nota(E,n);
+  nota(G,c-f);
+  nota(Fs,c+f);
+  nota(Fs,np);
+
+  nota(Fs_,c);
+  textopan("             /  ","    no queda mas");
+  nota(E,n);
+  nota(G,c-f);
+  nota(Fs,c+f);
+  nota(Fs,np);
+
+  nota(G_,c);
+  textopan("seremos dos  _  ","        extranos");
+  nota_sf(D,c);
+  nota(D,cp-f);
+  nota(E ,cp+f);
+  nota(Fs ,c+c);
+
+  nota(G,n);
+  nota(Fs,n);
+  nota(E,np);
+}
+
+void YoTeolvidare(){
+  textopan("              / "," Yo te olvidare ");
+  nota_sf(Fs,n);
+  nota(B_,c);
+  nota(E,n);
+  nota(G,c);
+  nota(Fs,n);
+  nota(Cs,n);
+  nota(Fs_,c);
+
+  textopan("          /     ","Me olvidaras    ");
+  nota(Cs,n);
+  nota(G,c);
+  nota(Fs,n);
+  nota(B_,n);
+  nota(G__,np);
+
+  textopan("Hasta nunca...  ","                ");
+  nota(B_,c);
+  nota(B_,n);
+  nota_sf(A,b);
+  nota(Cs,b);
+  nota(Sil,cp);
+  nota(Sil,cp);
+  nota(Sil,cp);
+  nota(Sil,cp);
+  nota(Sil,cp);
+}
+
+// ------------------ Setup ------------------
+void setup() {
+  lcd.init();
+  lcd.backlight();
+
+  lcd.setCursor(0,0);
+  lcd.print("Rosa Pastel     ");
+  lcd.setCursor(0,1);
+  lcd.print("Iniciando...");
+  delay(2000);
+}
+
+// ------------------ Loop ------------------
+void loop() {
+  NoNoquieroSer();
+  TuNoeres();
+  YquenoQueda();
+  YoTeolvidare();
+  delay(1500);
+}
